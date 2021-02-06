@@ -1,0 +1,10 @@
+ARG centos=7.9.2009
+FROM aursu/rpmbuild:${centos}-build
+
+USER root
+RUN yum -y install \
+        "pkgconfig(libsystemd)" \
+        systemd-devel \
+        openssl-devel \
+        tcl \
+    && yum clean all && rm -rf /var/cache/yum

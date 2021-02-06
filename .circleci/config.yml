@@ -1,0 +1,22 @@
+version: 2.1
+
+orbs:
+  docker-rpmbuild: aursu/rpmbuild@1.1.6
+
+workflows:
+  redis6build:
+    jobs:
+      - docker-rpmbuild/rpmbuild:
+          package-vcs-url: https://github.com/aursu/rpmbuild-redis6
+          name: centos8redis6build
+          base_service: centos8redis6base
+          build_service: centos8redis6build
+          bintray_uploader: centos8bintray
+          bintray-repo: custom
+      - docker-rpmbuild/rpmbuild:
+          package-vcs-url: https://github.com/aursu/rpmbuild-redis6
+          name: centos7redis6build
+          base_service: centos7redis6base
+          build_service: centos7redis6build
+          bintray_uploader: centos7bintray
+          bintray-repo: custom
