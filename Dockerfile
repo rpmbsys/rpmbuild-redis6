@@ -1,5 +1,13 @@
 ARG centos=7.9.2009
-FROM aursu/redis6build:${centos}-base
+FROM aursu/rpmbuild:${centos}-build
+
+USER root
+RUN yum -y install \
+        clang \
+        openssl-devel \
+        systemd-devel \
+        tcl \
+    && yum clean all && rm -rf /var/cache/yum
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS

@@ -10,14 +10,13 @@ addons:
 
 env:
   global:
-    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-redis6
+    - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - BINTRAY_REPO=custom
+    - OS7=7.9.2009
+    - OS7TAG=7.9.2009
   jobs:
-    - BASE=centos7redis6base BUILD=centos7redis6build UPLOADER=centos7bintray
-    - BASE=centos8redis6base BUILD=centos8redis6build UPLOADER=centos8bintray
-
-install:
-  - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}
+    - BUILD=centos7build UPLOADER=centos7bintray
+    - BUILD=centos8build UPLOADER=centos8bintray
 
 before_script:
   - docker-compose build --no-cache ${BUILD}
@@ -30,6 +29,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL ${UPLOADER}
+  script: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL ${UPLOADER}
   on:
     all_branches: true
