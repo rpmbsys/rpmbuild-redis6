@@ -7,6 +7,9 @@
 # Please preserve changelog entries
 #
 
+# temp workaround to https://bugzilla.redhat.com/2059488
+%undefine _package_note_file
+
 # Tests fail in mock, not in local build.
 %bcond_with    tests
 
@@ -15,14 +18,14 @@
 
 # Commit IDs for the (unversioned) redis-doc repository
 # https://fedoraproject.org/wiki/Packaging:SourceURL "Commit Revision"
-%global doc_commit 9fe1f36dd716ea982b8917f2bdb70ec4bfc3219b
+%global doc_commit bc8218eb481cc5d095ee7c274388a44dc09942e9
 %global short_doc_commit %(c=%{doc_commit}; echo ${c:0:7})
 
 # %%{rpmmacrodir} not usable on EL-6
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:              redis
-Version:           6.2.4
+Version:           6.2.8
 Release:           1%{?dist}
 Summary:           A persistent key-value database
 # redis, jemalloc, linenoise, lzf, hiredis are BSD
@@ -300,13 +303,16 @@ fi
 %{macrosdir}/*
 
 %files doc
-# main package is not required
-%license COPYING
+# specific for documentation (CC-BY-SA)
+%license doc/LICENSE
 %docdir %{_docdir}/%{name}
 %{_docdir}/%{name}
 
 
 %changelog
+* Tue Dec 13 2022 Remi Collet <remi@remirepo.net> - 6.2.8-1
+- Upstream 6.2.8 release.
+
 * Wed Jun  2 2021 Remi Collet <remi@remirepo.net> - 6.2.4-1
 - Upstream 6.2.4 release.
 

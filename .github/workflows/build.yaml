@@ -6,10 +6,9 @@ env:
   BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
   DOCKER_USER: ${{ secrets.DOCKER_USER }}
   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  BINTRAY_REPO: custom
   OS7: 7.9.2009
-  OS8: 8.3.2011
   OS7TAG: 7.9.2009
-  OS8TAG: 8.3.2011
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,10 +19,6 @@ jobs:
             repo: custom
             build: centos7build
             uploader: centos7bintray
-          - compose-file: docker-compose.yml
-            repo: custom
-            build: centos8build
-            uploader: centos8bintray
     env:
       BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
       BINTRAY_REPO: ${{ matrix.repo }}
