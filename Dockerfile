@@ -3,12 +3,12 @@ FROM aursu/rpmbuild:${os}-build
 
 USER root
 
-RUN yum -y install \
+RUN dnf -y install \
         clang \
         openssl-devel \
         systemd-devel \
         tcl \
-    && yum clean all && rm -rf /var/cache/yum
+    && dnf clean all && rm -rf /var/cache/dnf
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
 COPY SPECS ${BUILD_TOPDIR}/SPECS
