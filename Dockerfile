@@ -1,7 +1,8 @@
-ARG centos=7.9.2009
-FROM aursu/rpmbuild:${centos}-build
+ARG os=10.0.20250606
+FROM aursu/rpmbuild:${os}-build
 
 USER root
+
 RUN yum -y install \
         clang \
         openssl-devel \

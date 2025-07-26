@@ -13,19 +13,16 @@
 # Tests fail in mock, not in local build.
 %bcond_with    tests
 
-%define _debugsource_template %{nil}
-%define debug_package %{nil}
-
 # Commit IDs for the (unversioned) redis-doc repository
 # https://fedoraproject.org/wiki/Packaging:SourceURL "Commit Revision"
-%global doc_commit bc8218eb481cc5d095ee7c274388a44dc09942e9
+%global doc_commit c7880ba85fd67cb09110a4be790da47d4a6cec80
 %global short_doc_commit %(c=%{doc_commit}; echo ${c:0:7})
 
 # %%{rpmmacrodir} not usable on EL-6
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:              redis
-Version:           6.2.8
+Version:           6.2.12
 Release:           1%{?dist}
 Summary:           A persistent key-value database
 # redis, jemalloc, linenoise, lzf, hiredis are BSD
@@ -83,26 +80,26 @@ Provides:          bundled(lzf)
 Provides:          redis(modules_abi)%{?_isa} = %{redis_modules_abi}
 
 %description
-Redis is an advanced key-value store. It is often referred to as a data
-structure server since keys can contain strings, hashes, lists, sets and
+Redis is an advanced key-value store. It is often referred to as a data 
+structure server since keys can contain strings, hashes, lists, sets and 
 sorted sets.
 
 You can run atomic operations on these types, like appending to a string;
-incrementing the value in a hash; pushing to a list; computing set
-intersection, union and difference; or getting the member with highest
+incrementing the value in a hash; pushing to a list; computing set 
+intersection, union and difference; or getting the member with highest 
 ranking in a sorted set.
 
-In order to achieve its outstanding performance, Redis works with an
-in-memory dataset. Depending on your use case, you can persist it either
-by dumping the dataset to disk every once in a while, or by appending
+In order to achieve its outstanding performance, Redis works with an 
+in-memory dataset. Depending on your use case, you can persist it either 
+by dumping the dataset to disk every once in a while, or by appending 
 each command to a log.
 
-Redis also supports trivial-to-setup master-slave replication, with very
-fast non-blocking first synchronization, auto-reconnection on net split
+Redis also supports trivial-to-setup master-slave replication, with very 
+fast non-blocking first synchronization, auto-reconnection on net split 
 and so forth.
 
-Other features include Transactions, Pub/Sub, Lua scripting, Keys with a
-limited time-to-live, and configuration settings to make Redis behave like
+Other features include Transactions, Pub/Sub, Lua scripting, Keys with a 
+limited time-to-live, and configuration settings to make Redis behave like 
 a cache.
 
 You can use Redis from most programming languages also.
@@ -152,18 +149,10 @@ if test "$api" != "%{redis_modules_abi}"; then
    exit 1
 fi
 
-%if 0%{?rhel} == 7
-%global make_flags	DEBUG="" V="echo" LDFLAGS="%{?__global_ldflags}" CFLAGS+="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -m64 -mtune=generic -fPIC" INSTALL="install -p" PREFIX=%{buildroot}%{_prefix} BUILD_WITH_SYSTEMD=yes BUILD_TLS=yes
-%else
 %global make_flags	DEBUG="" V="echo" LDFLAGS="%{?__global_ldflags}" CFLAGS+="%{optflags} -fPIC" INSTALL="install -p" PREFIX=%{buildroot}%{_prefix} BUILD_WITH_SYSTEMD=yes BUILD_TLS=yes
-%endif
 
 %build
-%if 0%{?rhel} == 7
-CC=clang make %{?_smp_mflags} %{make_flags} all
-%else
-make %{?_smp_mflags} %{make_flags} all
-%endif
+%make_build %{make_flags} all
 
 %install
 make %{make_flags} install
@@ -310,11 +299,66 @@ fi
 
 
 %changelog
+* Tue Apr 18 2023 Remi Collet <remi@remirepo.net> - 6.2.12-1
+- Upstream 6.2.12 release.
+
+* Wed Mar  1 2023 Remi Collet <remi@remirepo.net> - 6.2.11-1
+- Upstream 6.2.11 release.
+
+* Wed Jan 18 2023 Remi Collet <remi@remirepo.net> - 6.2.10-1
+- Upstream 6.2.10 release.
+
+* Tue Jan 17 2023 Remi Collet <remi@remirepo.net> - 6.2.9-1
+- Upstream 6.2.9 release.
+
 * Tue Dec 13 2022 Remi Collet <remi@remirepo.net> - 6.2.8-1
 - Upstream 6.2.8 release.
 
+* Thu Apr 28 2022 Remi Collet <remi@remirepo.net> - 6.2.7-1
+- Upstream 6.2.7 release.
+
+* Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 6.2.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Wed Nov  3 2021 Remi Collet <remi@remirepo.net> - 6.2.6-2
+- use proper license in dec/devel sub-packages
+
+* Mon Oct  4 2021 Remi Collet <remi@remirepo.net> - 6.2.6-1
+- Upstream 6.2.6 release.
+
+* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 6.2.5-2
+- Rebuilt with OpenSSL 3.0.0
+
+* Thu Jul 22 2021 Nathan Scott <nathans@redhat.com> - 6.2.5-1
+- Upstream 6.2.5 release (RHBZ #1984631).
+- Fix CVE-2021-32761: 32-bit systems BITFIELD command integer overflow.
+
 * Wed Jun  2 2021 Remi Collet <remi@remirepo.net> - 6.2.4-1
 - Upstream 6.2.4 release.
+
+* Tue May  4 2021 Remi Collet <remi@remirepo.net> - 6.2.3-1
+- Upstream 6.2.3 release
+
+* Tue Apr 20 2021 Remi Collet <remi@remirepo.net> - 6.2.2-1
+- Upstream 6.2.2 release
+
+* Thu Apr 01 2021 Nathan Scott <nathans@redhat.com> - 6.2.1-1
+- Upstream 6.2.1 release
+- Merged make-macros spec change from Tom Stellard
+
+* Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 6.2.0-2
+- Rebuilt for updated systemd-rpm-macros
+  See https://pagure.io/fesco/issue/2583.
+
+* Mon Mar 01 2021 Nathan Scott <nathans@redhat.com> - 6.2.0-1
+- Upstream 6.2.0 release (RHBZ #1915463).
+- drop patch merged upstream.
+
+* Wed Feb 24 2021 Nathan Scott <nathans@redhat.com> - 6.0.11-1
+- Upstream 6.0.11 release.
+
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 6.0.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
 * Wed Jan 13 2021 Remi Collet <remi@remirepo.net> - 6.0.10-1
 - Upstream 6.0.10 release.

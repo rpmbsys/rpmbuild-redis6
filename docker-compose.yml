@@ -1,13 +1,21 @@
-version: "3"
 services:
-  centos7build:
+  rocky10build:
     volumes:
-      - rpm7:/home/centos/rpmbuild/RPMS
+      - rpm10rocky:/home/centos/rpmbuild/RPMS
     build:
       context: .
       args:
-        centos: $OS7
+        os: $RL10
+  rocky9build:
+    volumes:
+      - rpm9rocky:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        os: $RL9
 
 volumes:
-  rpm7:
-    name: rpm7
+  rpm10rocky:
+    name: rpm10rocky
+  rpm9rocky:
+    name: rpm9rocky
